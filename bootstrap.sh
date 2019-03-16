@@ -2,15 +2,15 @@
 
 log_file="/var/log/system-bootstrap.log"
 
-echo "$(date) [INIT] BOOTSTRAP.SH" >> "$log_file"
+echo "$(date) Starting Bootstrap.sh" >> "$log_file"
 
-# update system packages
+# system packages
 if [[ $1 -eq 0 ]]; then
   yum -y update &&
-  echo "$(date) Packages updated successfully." >> "$log_file"
-
+  echo "$(date) The packages were updated successfully." >> "$log_file"
+#checking the exit status of update command
   if [[ "$?" -eq 1 ]]; then
-    echo "$(date) Failed to update packages." >> "$log_file"
+    echo "$(date) The packages failed to update" >> "$log_file"
   fi
 fi
 
@@ -18,6 +18,7 @@ fi
 sed -i 's/SETENFORCE=[a-z]*/SETENFORCE=disabled/g' /etc/selinux/config &&
 echo "$(date) SETENFORCE successfully set to 'disabled'." >> "$log_file"
 
+#checking the exit status of setenforce command
 if [[ "$?" -eq 0 ]]; then
   setenforce 0 &&
   echo "$(date) SETENFORCE successfully set to '0'." >> "$log_file"
@@ -27,4 +28,3 @@ if [[ "$?" -eq 0 ]]; then
 fi
 
 echo "$(date) Bootstrap finished" >> "$log_file" 
-echo "$(date) Bootstrap results are available in the $log_file file."
